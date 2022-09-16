@@ -74,6 +74,7 @@ import UIKit
     public var defaultBorderColor: UIColor = UIColor.gray
     public var filledBorderColor: UIColor = UIColor.clear
     public var errorBorderColor: UIColor?
+    public var isTwoLineBorder: Bool = false
     
     public weak var delegate: OTPFieldViewDelegate?
     
@@ -140,8 +141,12 @@ import UIKit
         }
         
         // Set the border values if needed
-        otpField.otpBorderColor = defaultBorderColor
-        otpField.otpBorderWidth = fieldBorderWidth
+        if !isTwoLineBorder {
+            otpField.otpBorderColor = defaultBorderColor
+            otpField.otpBorderWidth = fieldBorderWidth
+        }
+        
+        otpField.isTwoLineBorder = self.isTwoLineBorder
         
         if requireCursor {
             otpField.tintColor = cursorColor
@@ -197,11 +202,14 @@ import UIKit
                 }
                 
                 let fieldBackgroundColor = (otpField?.text ?? "").isEmpty ? defaultBackgroundColor : filledBackgroundColor
+                
                 let fieldBorderColor = (otpField?.text ?? "").isEmpty ? defaultBorderColor : filledBorderColor
                 
                 if displayType == .diamond || displayType == .underlinedBottom {
-                    otpField?.shapeLayer.fillColor = fieldBackgroundColor.cgColor
-                    otpField?.shapeLayer.strokeColor = fieldBorderColor.cgColor
+                    if !isTwoLineBorder {
+                        otpField?.shapeLayer.fillColor = fieldBackgroundColor.cgColor
+                        otpField?.shapeLayer.strokeColor = fieldBorderColor.cgColor
+                    }
                 } else {
                     otpField?.backgroundColor = fieldBackgroundColor
                     otpField?.layer.borderColor = fieldBorderColor.cgColor
@@ -234,10 +242,14 @@ import UIKit
                     
                     if !isValid {
                         // Set error border color if set, if not, set default border color
-                        otpField?.layer.borderColor = (errorBorderColor ?? filledBorderColor).cgColor
+                        if !isTwoLineBorder {
+                            otpField?.layer.borderColor = (errorBorderColor ?? filledBorderColor).cgColor
+                        }
                     }
                     else {
+                        if !isTwoLineBorder {
                         otpField?.layer.borderColor = filledBorderColor.cgColor
+                        }
                     }
                 }
             }
@@ -281,8 +293,10 @@ extension OTPFieldView: UITextFieldDelegate {
             }
             
             if displayType == .diamond || displayType == .underlinedBottom {
-                (textField as! OTPTextField).shapeLayer.fillColor = filledBackgroundColor.cgColor
-                (textField as! OTPTextField).shapeLayer.strokeColor = filledBorderColor.cgColor
+                if !isTwoLineBorder {
+                    (textField as! OTPTextField).shapeLayer.fillColor = filledBackgroundColor.cgColor
+                    (textField as! OTPTextField).shapeLayer.strokeColor = filledBorderColor.cgColor
+                }
             }
             else {
                 textField.backgroundColor = filledBackgroundColor
@@ -328,8 +342,10 @@ extension OTPFieldView: UITextFieldDelegate {
         textField.text = ""
         
         if displayType == .diamond || displayType == .underlinedBottom {
-            (textField as! OTPTextField).shapeLayer.fillColor = defaultBackgroundColor.cgColor
-            (textField as! OTPTextField).shapeLayer.strokeColor = defaultBorderColor.cgColor
+            if !isTwoLineBorder {
+                (textField as! OTPTextField).shapeLayer.fillColor = defaultBackgroundColor.cgColor
+                (textField as! OTPTextField).shapeLayer.strokeColor = defaultBorderColor.cgColor
+            }
         } else {
             textField.backgroundColor = defaultBackgroundColor
             textField.layer.borderColor = defaultBorderColor.cgColor

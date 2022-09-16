@@ -38,7 +38,12 @@ import UIKit
     /// Border width info for field
     public var otpBorderWidth: CGFloat = 2
     
+    ///Custom border for app
+    public var isTwoLineBorder: Bool = false
+    
     public var shapeLayer: CAShapeLayer!
+    
+    public var shapeLayer1: CAShapeLayer!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -115,17 +120,61 @@ import UIKit
     
     // Helper function to create a underlined bottom view
     fileprivate func addBottomView() {
-        let path = UIBezierPath()
-        path.move(to: CGPoint(x: 0, y: bounds.size.height))
-        path.addLine(to: CGPoint(x: bounds.size.width, y: bounds.size.height))
-        path.close()
+//        let path = UIBezierPath()
+//        path.move(to: CGPoint(x: 0, y: bounds.size.height))
+//        path.addLine(to: CGPoint(x: bounds.size.width, y: bounds.size.height))
+//        path.close()
+//
+//        shapeLayer = CAShapeLayer()
+//        shapeLayer.path = path.cgPath
+//        shapeLayer.lineWidth = otpBorderWidth
+//        shapeLayer.fillColor = backgroundColor?.cgColor
+//        shapeLayer.strokeColor = otpBorderColor.cgColor
+//
+//        layer.addSublayer(shapeLayer)
         
-        shapeLayer = CAShapeLayer()
-        shapeLayer.path = path.cgPath
-        shapeLayer.lineWidth = otpBorderWidth
-        shapeLayer.fillColor = backgroundColor?.cgColor
-        shapeLayer.strokeColor = otpBorderColor.cgColor
         
-        layer.addSublayer(shapeLayer)
+        if isTwoLineBorder {
+                let path = UIBezierPath()
+                path.move(to: CGPoint(x: 0, y: bounds.size.height-2))
+                path.addLine(to: CGPoint(x: bounds.size.width, y: bounds.size.height-2))
+                path.close()
+                
+                shapeLayer = CAShapeLayer()
+                shapeLayer.path = path.cgPath
+                shapeLayer.lineWidth = otpBorderWidth
+                shapeLayer.fillColor = backgroundColor?.cgColor
+                shapeLayer.strokeColor =  colorLiteral(red: 1, green: 0.6431372549, blue: 0.2196078431, alpha: 1).cgColor
+
+                layer.insertSublayer(shapeLayer, at: 2)
+                
+                let path1 = UIBezierPath()
+                path1.move(to: CGPoint(x: 0, y: bounds.size.height))
+                path1.addLine(to: CGPoint(x: bounds.size.width, y: bounds.size.height))
+                path1.close()
+                
+                shapeLayer1 = CAShapeLayer()
+                shapeLayer1.path = path1.cgPath
+                shapeLayer1.lineWidth = otpBorderWidth
+                shapeLayer1.strokeColor =  colorLiteral(red: 1, green: 0, blue: 0.2392156863, alpha: 1).cgColor
+                shapeLayer1.fillColor = backgroundColor?.cgColor
+
+                layer.insertSublayer(shapeLayer1, at: 1)
+
+        } else {
+            let path = UIBezierPath()
+            path.move(to: CGPoint(x: 0, y: bounds.size.height))
+            path.addLine(to: CGPoint(x: bounds.size.width, y: bounds.size.height))
+            path.close()
+            
+            shapeLayer = CAShapeLayer()
+            shapeLayer.path = path.cgPath
+            shapeLayer.lineWidth = otpBorderWidth
+            shapeLayer.fillColor = backgroundColor?.cgColor
+            shapeLayer.strokeColor = otpBorderColor.cgColor
+            
+            layer.addSublayer(shapeLayer)
+        }
+        
     }
 }
